@@ -1,3 +1,11 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.messageSent {
+    @apply bg-green-500 bg-opacity-25
+}
+
+.messageReceive {
+    @apply bg-gray-500 bg-opacity-25
+}

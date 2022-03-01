@@ -24,4 +24,9 @@ class PageController extends Controller
     {
         return Inertia::render('Dashboard');
     }
+
+    public function chat()
+    {
+        return Inertia::render('Chat');
+    }
 }
