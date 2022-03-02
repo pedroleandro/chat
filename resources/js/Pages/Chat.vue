@@ -27,21 +27,17 @@
                     <div class="w-9/12 flex flex-col justify-between">
 
                         <div class="w-full p-6 flex flex-col overflow-y-scroll">
-                            <div v-for="message in messages" :key="message.id"
-                                class="w-full mb-3 text-right">
-                                <p class="inline-block p-2 rounded-md messageSent" style="max-width: 75%;">
+                            <div
+                                v-for="message in messages" :key="message.id"
+                                :class="((message.from === user.id) ? 'text-right' : '')"
+                                class="w-full mb-3">
+                                <p
+                                    :class="((message.from === user.id) ? 'messageSent' : 'messageReceive')"
+                                    class="inline-block p-2 rounded-md messageSent" style="max-width: 75%;">
                                     {{ message.message }}
                                 </p>
                                 <span class="block mt-1 text-xs text-gray-500">
                                     {{ message.created_at }}
-                                </span>
-                            </div>
-                            <div class="w-full mb-3">
-                                <p class="inline-block p-2 rounded-md messageSent" style="max-width: 75%;">
-
-                                </p>
-                                <span class="block mt-1 text-xs text-gray-500">
-                                    01/03/2022 13:42
                                 </span>
                             </div>
                         </div>
@@ -66,7 +62,9 @@
 
 <script>
 import {defineComponent} from 'vue'
+import {computed} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import {usePage} from '@inertiajs/inertia-vue3'
 
 export default defineComponent({
     components: {
@@ -74,13 +72,13 @@ export default defineComponent({
     },
     data() {
         return {
+            user: usePage().props.value.auth.user,
             users: [],
             messages: []
         }
     },
     methods: {
         loadMessages: function (userId) {
-            console.log(userId)
             axios.get(`api/messages/${userId}`).then(response => {
                 this.messages = response.data.messages
             })
