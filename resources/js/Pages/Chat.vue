@@ -44,9 +44,9 @@
                         </div>
 
                         <div v-if="userActive" class="w-full bg-gray-200 bg-opacity-25 p-6 border-t border-gray-200">
-                            <form action="">
+                            <form v-on:submit.prevent="sendMessage" action="">
                                 <div class="flex rounded-md overflow-hidden border border-gray-300">
-                                    <input type="text" class="flex-1 px-4 py-2 text-sm focus:outline-none">
+                                    <input v-model="message" type="text" class="flex-1 px-4 py-2 text-sm focus:outline-none">
                                     <button type="submit"
                                             class="ml-0.5 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2">
                                         Enviar
@@ -76,7 +76,8 @@ export default defineComponent({
             user: usePage().props.value.auth.user,
             users: [],
             messages: [],
-            userActive: null
+            userActive: null,
+            message: ''
         }
     },
     methods: {
@@ -92,6 +93,14 @@ export default defineComponent({
         formatDate: function (value) {
             moment.locale('pt-br');
             return moment(value).format('lll');
+        },
+        sendMessage: function (){
+            axios.post('api/messages', {
+                'message': this.message,
+                'to': this.userActive.id
+            }).then(response => {
+                console.log(response)
+            })
         }
     },
     mounted() {
