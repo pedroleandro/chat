@@ -37,7 +37,7 @@
                                     {{ message.message }}
                                 </p>
                                 <span class="block mt-1 text-xs text-gray-500">
-                                    {{ message.created_at }}
+                                    {{ formatDate(message.created_at) }}
                                 </span>
                             </div>
                         </div>
@@ -62,9 +62,9 @@
 
 <script>
 import {defineComponent} from 'vue'
-import {computed} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import {usePage} from '@inertiajs/inertia-vue3'
+import moment from 'moment';
 
 export default defineComponent({
     components: {
@@ -82,9 +82,14 @@ export default defineComponent({
             axios.get(`api/messages/${userId}`).then(response => {
                 this.messages = response.data.messages
             })
+        },
+        formatDate: function (value) {
+            moment.locale('pt-br');
+            return moment(value).format('lll');
         }
     },
     mounted() {
+        moment.locale('pt-br')
         axios.get('/api/users').then(response => {
             this.users = response.data.users
         });

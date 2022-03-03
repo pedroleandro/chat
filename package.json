@@ -31,5 +31,8 @@
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
         }
+    },
+    "dependencies": {
+        "moment": "^2.29.1"
     }
 }
