@@ -31,7 +31,7 @@
                             <div
                                 v-for="message in messages" :key="message.id"
                                 :class="((message.from === user.id) ? 'text-right' : '')"
-                                class="w-full mb-3">
+                                class="w-full mb-3 message">
                                 <p
                                     :class="((message.from === user.id) ? 'messageSent' : 'messageReceive')"
                                     class="inline-block p-2 rounded-md messageSent" style="max-width: 75%;">
@@ -81,21 +81,28 @@ export default defineComponent({
         }
     },
     methods: {
-        loadMessages: function (userId) {
+        scrollToBottom: function () {
+            if(this.messages.length){
+                document.querySelectorAll('.message:last-child')[0].scrollIntoView()
+            }
+        },
+        loadMessages: async function (userId) {
             axios.get(`api/users/${userId}`).then(response => {
                 this.userActive = response.data.user
             })
 
-            axios.get(`api/messages/${userId}`).then(response => {
+            await axios.get(`api/messages/${userId}`).then(response => {
                 this.messages = response.data.messages
             })
+
+            this.scrollToBottom()
         },
         formatDate: function (value) {
             moment.locale('pt-br');
             return moment(value).format('lll');
         },
-        sendMessage: function (){
-            axios.post('api/messages', {
+        sendMessage: async function (){
+            await axios.post('api/messages', {
                 'message': this.message,
                 'to': this.userActive.id
             }).then(response => {
@@ -109,6 +116,7 @@ export default defineComponent({
 
                 this.message = ''
             })
+            this.scrollToBottom()
         }
     },
     mounted() {
