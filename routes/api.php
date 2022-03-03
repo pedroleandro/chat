@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\UserController;
@@ -22,5 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::apiResource('users', UserController::class);
+
+    Route::get('/messages/{user}', [MessageController::class, 'listOfMessagesbyUser'])->name('messages.listOfMessagesbyUser');
+    Route::apiResource('messages', MessageController::class);
 
 });
