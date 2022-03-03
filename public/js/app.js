@@ -20757,19 +20757,29 @@ __webpack_require__.r(__webpack_exports__);
       return moment__WEBPACK_IMPORTED_MODULE_3___default()(value).format('lll');
     },
     sendMessage: function sendMessage() {
+      var _this2 = this;
+
       axios.post('api/messages', {
         'message': this.message,
         'to': this.userActive.id
       }).then(function (response) {
-        console.log(response);
+        _this2.messages.push({
+          'from': _this2.user.id,
+          'to': _this2.userActive.id,
+          'message': _this2.message,
+          'created_at': new Date().toISOString(),
+          'updated_at': new Date().toISOString()
+        });
+
+        _this2.message = '';
       });
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     axios.get('/api/users').then(function (response) {
-      _this2.users = response.data.users;
+      _this3.users = response.data.users;
     });
   }
 }));

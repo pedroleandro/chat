@@ -99,7 +99,15 @@ export default defineComponent({
                 'message': this.message,
                 'to': this.userActive.id
             }).then(response => {
-                console.log(response)
+                this.messages.push({
+                    'from': this.user.id,
+                    'to': this.userActive.id,
+                    'message': this.message,
+                    'created_at': new Date().toISOString(),
+                    'updated_at': new Date().toISOString()
+                })
+
+                this.message = ''
             })
         }
     },
