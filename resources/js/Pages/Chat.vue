@@ -120,9 +120,20 @@ export default defineComponent({
         }
     },
     mounted() {
+
         axios.get('/api/users').then(response => {
             this.users = response.data.users
         });
+
+        Echo.private(`user.${this.user.id}`).listen('.SendMessage', async (event) => {
+
+            if(this.userActive && this.userActive.id === event.message.from){
+                await this.messages.push(event.message)
+                this.scrollToBottom()
+            }else{
+
+            }
+        })
     }
 })
 </script>

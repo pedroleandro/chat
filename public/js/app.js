@@ -20851,6 +20851,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     axios.get('/api/users').then(function (response) {
       _this3.users = response.data.users;
     });
+    Echo["private"]("user.".concat(this.user.id)).listen('.SendMessage', /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(event) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!(_this3.userActive && _this3.userActive.id === event.message.from)) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _context3.next = 3;
+                return _this3.messages.push(event.message);
+
+              case 3:
+                _this3.scrollToBottom();
+
+                _context3.next = 6;
+                break;
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }());
   }
 }));
 
@@ -26158,8 +26190,10 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "myappkey",
+  wsHost: window.location.hostname,
+  wsPort: 6001,
   cluster: "mt1",
-  forceTLS: true
+  forceTLS: false
 });
 
 /***/ }),
