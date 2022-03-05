@@ -20770,6 +20770,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _loadMessages = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(userId) {
         var _this = this;
 
+        var user;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -20783,9 +20784,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 3:
+                user = this.users.filter(function (user) {
+                  if (user.id === userId) {
+                    return user;
+                  }
+                });
+
+                if (user) {
+                  user[0].notification = false;
+                }
+
                 this.scrollToBottom();
 
-              case 4:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -20851,6 +20862,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     axios.get('/api/users').then(function (response) {
       _this3.users = response.data.users;
     });
+    Echo["private"]("user.".concat(this.user.id)).listen('.SendMessage', /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(event) {
+        var user;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!(_this3.userActive && _this3.userActive.id === event.message.from)) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _context3.next = 3;
+                return _this3.messages.push(event.message);
+
+              case 3:
+                _this3.scrollToBottom();
+
+                _context3.next = 8;
+                break;
+
+              case 6:
+                user = _this3.users.filter(function (user) {
+                  if (user.id === event.message.from) {
+                    return user;
+                  }
+                });
+
+                if (user) {
+                  user[0].notification = true;
+                }
+
+              case 8:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }());
   }
 }));
 
@@ -24687,13 +24742,10 @@ var _hoisted_6 = ["onClick"];
 var _hoisted_7 = {
   "class": "flex items-center"
 };
-
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "ml-2 w-2 h-2 bg-blue-500 rounded-full"
-}, null, -1
-/* HOISTED */
-);
-
+var _hoisted_8 = {
+  key: 0,
+  "class": "ml-2 w-2 h-2 bg-red-500 rounded-full disabled"
+};
 var _hoisted_9 = {
   "class": "w-9/12 flex flex-col justify-between"
 };
@@ -24737,7 +24789,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([_ctx.userActive && _ctx.userActive.id == user.id ? 'bg-blue-400 bg-opacity-50' : '', "p-6 text-lg text-gray-600 leading-7 font-semibold border-b border-gray-200 hover:bg-blue-400 hover:bg-opacity-50 hover:cursor-pointer"])
         }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name) + " ", 1
         /* TEXT */
-        ), _hoisted_8])], 10
+        ), user.notification ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_8)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 10
         /* CLASS, PROPS */
         , _hoisted_6);
       }), 128
@@ -26158,8 +26210,10 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "myappkey",
+  wsHost: window.location.hostname,
+  wsPort: 6001,
   cluster: "mt1",
-  forceTLS: true
+  forceTLS: false
 });
 
 /***/ }),
